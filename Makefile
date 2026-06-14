@@ -1,3 +1,15 @@
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    Makefile                                           :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: refernan <refernan@student.42sp.org.br>    +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2026/06/13 15:32:33 by refernan          #+#    #+#              #
+#    Updated: 2026/06/13 15:32:34 by refernan         ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
+
 NAME = libftprintf.a
 CC = cc
 CFLAGS = -Wall -Wextra -Werror
@@ -7,7 +19,7 @@ RM = rm -f
 LIBFT_DIR = ./libft
 LIBFT = $(LIBFT_DIR)/libft.a
 
-SRCS = ft_printf.c ft_utils.c
+SRCS = ft_printf.c ft_str_utils.c ft_nbr_utils.c ft_ptr_utils.c
 OBJS = $(SRCS:.c=.o)
 
 all: $(NAME)
@@ -32,9 +44,4 @@ fclean: clean
 
 re: fclean all
 
-test: all
-	$(CC) $(CFLAGS) main.c $(NAME) -I. -I$(LIBFT_DIR) -o test_executable
-	./test_executable
-	$(RM) test_executable
-
-.PHONY: all clean fclean re test
+.PHONY: all clean fclean re
