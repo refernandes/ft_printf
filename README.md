@@ -3,9 +3,11 @@
 # ft_printf - @42sp
 
 ## Description
-`ft_printf` is a project of the 42 curriculum. The goal is to create a library containing a reimplementation of the famous `printf` function from the standard C library (`<stdio.h>`). This project is designed to introduce the concept of variadic arguments in C, allowing a function to accept a variable number of arguments.
+The goal of this project is pretty straightforward: to recode the famous `printf()` function from the standard C library (`<stdio.h>`). This project serves as a structured introduction to variadic functions in C, allowing a function to accept a variable number of arguments through `stdarg.h`.
 
-Building this library helped me solidify my knowledge of memory management, string formatting, and the C language logic, specifically regarding the use of `stdarg.h`.
+The implementation focuses on mimicking the original behavior of the system's `printf` concerning output format and character counting, while emphasizing structured, error-resilient, and highly extensible code without relying on complex buffer management. 
+
+Building this library helped me solidify my knowledge of memory management, string formatting, and the C language logic.
 
 ## Instructions
 
@@ -16,38 +18,48 @@ To compile the library, simply run `make` in the root of the repository:
 make
 ```
 
-This will generate the `libftprintf.a` file.
+This will generate the `libftprintf.a` file at the root of the repository.
 
 ### Makefile Targets
-- `make` or `make all`: Compiles the source files and creates the library.
-- `make clean`: Removes the object files (`.o`).
-- `make fclean`: Removes the object files and the compiled library (`libftprintf.a`).
-- `make re`: Recompiles the entire project (fclean + all).
+- `make` or `make all`: Compiles the source files and creates the static library `libftprintf.a`.
+- `make clean`: Removes the local object files (`.o`).
+- `make fclean`: Removes the object files and the compiled library file.
+- `make re`: Recompiles the entire project from scratch (fclean + all) without performing unnecessary relinking.
 
 ### Usage
-To use `ft_printf` in your own projects, include the header in your C files and link the library during compilation:
+To use `ft_printf` in your own C projects, include the header file and link the compiled library during compilation:
 
 ```c
 #include "ft_printf.h"
 ```
 
-Compile your project with:
+Compile your project linking the static library:
 ```bash
-cc your_file.c -L. -lftprintf -o your_program
+cc your_file.c libftprintf.a -o your_program
 ```
 
 ## Detailed Description
-The `ft_printf` function mimics the behavior of the original `printf` function and implements the following format specifiers:
+The project is built on top of a modular and linear architecture. The core logic is driven by a main parser that iterates through the format string and delegates specialized printing responsibilities to specific utility modules:
+
+### Supported Conversions
+The library fully handles the following mandatory specifiers:
 
 - `%c`: Prints a single character.
-- `%s`: Prints a string.
-- `%p`: Prints a `void *` pointer argument in hexadecimal format.
-- `%d`: Prints a decimal (base 10) number.
-- `%i`: Prints an integer in base 10.
-- `%u`: Prints an unsigned decimal (base 10) number.
-- `%x`: Prints a number in hexadecimal (base 16) lowercase format.
-- `%X`: Prints a number in hexadecimal (base 16) uppercase format.
+- `%s`: Prints a string (handles `NULL` gracefully by outputting `(null)`).
+- `%p`: Prints a `void *` pointer argument in hexadecimal format (prefixed with `0x` and outputs `(nil)` if the pointer is null).
+- `%d` / `%i`: Prints a signed base 10 integer (fully protects against `INT_MIN` overflow).
+- `%u`: Prints an unsigned base 10 decimal number.
+- `%x`: Prints a number in lowercase hexadecimal (base 16) format.
+- `%X`: Prints a number in uppercase hexadecimal (base 16) format.
 - `%%`: Prints a literal percent sign.
+
+### Detailed Algorithm Explanation & Justification
+Unlike naive approaches that allocate dynamic memory (`malloc`) to convert integers or hexadecimals into temporary strings, this library implements a **Low-Memory Recursive Decomposition Algorithm**.
+
+#### Technical Choices & Architectural Justifications:
+- **Zero-Malloc Numeric Conversions**: For `%d`, `%i`, `%u`, `%x`, and `%X`, the numbers are broken down mathematically by base division (e.g., base 10 or base 16) through recursion. Characters are printed from the deepest recursive stack level upwards. This approach eliminates the risk of heap memory leaks and reduces memory overhead.
+- **Unified Error Propagation (status design pattern)**: Every sub-printing function returns the exact number of characters written or `-1` if a system-level failure occurs in the `write` call. A tracking variable named `status` captures these returns at every level of the recursive stack. If any write fails anywhere in the system, the error immediately short-circuits the stack and aborts execution, ensuring robust system-level compliance.
+- **Memory Protection & Safe Linear Traversal**: Character and string printing are completely linear. String pointers are guarded against `NULL` states prior to any read operation, effectively preventing unpredictable Segmentation Faults.
 
 ### Internal Structure
 The project is divided into several utility files for better organization:
