@@ -6,7 +6,7 @@
 /*   By: refernan <refernan@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/12 20:47:38 by refernan          #+#    #+#             */
-/*   Updated: 2026/06/13 15:28:50 by refernan         ###   ########.fr       */
+/*   Updated: 2026/06/14 11:48:07 by refernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 
 # include <unistd.h>
 # include <stdarg.h>
-# include "./libft/libft.h"
 
 int		ft_printf(const char *format, ...);
 int		print_str(char *str);
