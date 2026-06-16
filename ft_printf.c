@@ -6,7 +6,7 @@
 /*   By: refernan <refernan@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/12 20:47:27 by refernan          #+#    #+#             */
-/*   Updated: 2026/06/14 10:06:13 by refernan         ###   ########.fr       */
+/*   Updated: 2026/06/15 21:21:45 by refernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@ int	ft_printf(const char *str, ...)
 	va_list	args;
 	int		i;
 	int		count;
-	int		status;
 
 	if (str == NULL)
 		return (-1);
@@ -28,16 +27,16 @@ int	ft_printf(const char *str, ...)
 	va_start(args, str);
 	while (str[i] != '\0')
 	{
-		if (str[i] == '%' && str[i + 1])
-			status = parser_format(&args, str[++i]);
-		else if (str[i] == '%')
-			status = -1;
+		if (str[i] == '%' && str[i + 1] != '\0')
+		{
+			count += parser_format(&args, str[i + 1]);
+			i += 2;
+		}
 		else
-			status = print_char(str[i]);
-		if (status == -1)
-			return (va_end(args), -1);
-		count += status;
-		i++;
+		{
+			count += print_char(str[i]);
+			i++;
+		}
 	}
 	va_end(args);
 	return (count);

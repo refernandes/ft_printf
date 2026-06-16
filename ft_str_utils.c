@@ -6,7 +6,7 @@
 /*   By: refernan <refernan@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/13 10:07:39 by refernan          #+#    #+#             */
-/*   Updated: 2026/06/14 10:42:25 by refernan         ###   ########.fr       */
+/*   Updated: 2026/06/15 21:09:38 by refernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,7 @@ int	print_str(char *s)
 		return (write(1, "(null)", 6));
 	while (s[i] != '\0')
 	{
-		if (write(1, &s[i], 1) == -1)
-			return (-1);
+		print_char(s[i]);
 		i++;
 	}
 	return (i);
