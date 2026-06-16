@@ -58,7 +58,6 @@ Unlike naive approaches that allocate dynamic memory (`malloc`) to convert integ
 
 #### Technical Choices & Architectural Justifications:
 - **Zero-Malloc Numeric Conversions**: For `%d`, `%i`, `%u`, `%x`, and `%X`, the numbers are broken down mathematically by base division (e.g., base 10 or base 16) through recursion. Characters are printed from the deepest recursive stack level upwards. This approach eliminates the risk of heap memory leaks and reduces memory overhead.
-- **Unified Error Propagation (status design pattern)**: Every sub-printing function returns the exact number of characters written or `-1` if a system-level failure occurs in the `write` call. A tracking variable named `status` captures these returns at every level of the recursive stack. If any write fails anywhere in the system, the error immediately short-circuits the stack and aborts execution, ensuring robust system-level compliance.
 - **Memory Protection & Safe Linear Traversal**: Character and string printing are completely linear. String pointers are guarded against `NULL` states prior to any read operation, effectively preventing unpredictable Segmentation Faults.
 
 ### Internal Structure
